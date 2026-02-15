@@ -1,0 +1,312 @@
+{
+  "project": {
+    "name": "Production Analyzer",
+    "title_fa": "تحلیل‌گر تولید",
+    "description": "نرم‌افزار تحلیل داده‌های تولید روزانه با پشتیبانی کامل از زبان فارسی",
+    "version": "1.0.0",
+    "date": "2026-02-14"
+  },
+  "introduction": {
+    "overview": "Production Analyzer یک نرم‌افزار تحلیل تولید است که برای بررسی و تحلیل داده‌های تولیدی در بازه‌های زمانی روزانه (شنبه تا جمعه) طراحی شده است. این نرم‌افزار با قابلیت پشتیبانی کامل از زبان فارسی (پشتیبانی از متون فارسی و عربی) و با استفاده از کتابخانه‌های قدرتمند پایتون مانند Tkinter برای رابط کاربری، Plotly و Matplotlib برای مصورسازی داده‌ها ساخته شده است.",
+    "goals": [
+      "تحلیل عملکرد تولید بر اساس داده‌های روزانه",
+      "محاسبه نرخ موفقیت تولید",
+      "پر کردن داده‌های گمشده با روش‌های آماری",
+      "ارائه گزارش‌های تحلیلی و مصورسازی تعاملی",
+      "پشتیبانی کامل از زبان و اعداد فارسی"
+    ],
+    "key_features": [
+      "پشتیبانی کامل از زبان فارسی با استفاده از کتابخانه‌های arabic-reshaper و python-bidi",
+      "تحلیل داده‌های تولید در ۷ روز هفته",
+      "محاسبه نرخ موفقیت (Success Rate)",
+      "پر کردن خودکار داده‌های گمشده با استفاده از رگرسیون خطی",
+      "ارائه نمودارهای تعاملی با Plotly (قابل نمایش درون برنامه یا مرورگر)",
+      "گزارش‌های آماری شامل آزمون t-test، همبستگی و رگرسیون",
+      "فیلتر و جستجوی کلیدهای Stuff",
+      "امکان ذخیره گزارش‌ها به صورت HTML"
+    ]
+  },
+  "data_structure": {
+    "file_format": {
+      "type": "Excel",
+      "extensions": [".xlsx", ".xls", ".xlsm"],
+      "description": "فایل‌های Excel با ساختار مشخص"
+    },
+    "sheet_structure": {
+      "columns": [
+        {"position": "A", "description": "نام محصول/قطعه (Stuff)"},
+        {"position": "B", "description": "برنامه تولید روز شنبه"},
+        {"position": "C", "description": "تولید واقعی روز شنبه"},
+        {"position": "D", "description": "نرخ موفقیت روز شنبه"},
+        {"position": "E", "description": "برنامه تولید روز یکشنبه"},
+        {"position": "F", "description": "تولید واقعی روز یکشنبه"},
+        {"position": "G", "description": "نرخ موفقیت روز یکشنبه"}
+      ],
+      "note": "به همین ترتیب برای سایر روزها ادامه دارد"
+    },
+    "days_of_week": [
+      {"english": "Saturday", "persian": "شنبه"},
+      {"english": "Sunday", "persian": "یکشنبه"},
+      {"english": "Monday", "persian": "دوشنبه"},
+      {"english": "Tuesday", "persian": "سه‌شنبه"},
+      {"english": "Wednesday", "persian": "چهارشنبه"},
+      {"english": "Thursday", "persian": "پنج‌شنبه"},
+      {"english": "Friday", "persian": "جمعه"}
+    ],
+    "sample_data": "داده‌های موجود در فایل DataSet.xlsx شامل محصولات متنوعی مانند انواع رودری (درب خودرو)، داشبورد، کنسول، قطعات داخلی خودرو و ... می‌باشد. هر شیت (از ۲۷ تا ۳۹ به جز ۳۳) داده‌های یک روز خاص را شامل می‌شود."
+  },
+  "architecture": {
+    "layers": [
+      {
+        "name": "UI Layer",
+        "title_fa": "لایه ارائه",
+        "components": ["Tkinter", "ModernStyle"],
+        "description": "رابط کاربری برنامه"
+      },
+      {
+        "name": "Data Layer",
+        "title_fa": "لایه داده",
+        "components": ["ExcelReader", "DatasetParser", "DataRepository"],
+        "description": "خواندن و پردازش داده‌ها"
+      },
+      {
+        "name": "Analytics Layer",
+        "title_fa": "لایه تحلیل",
+        "components": ["Analyzer", "T-test", "Correlation", "Regression"],
+        "description": "تحلیل‌های آماری"
+      },
+      {
+        "name": "Visualization Layer",
+        "title_fa": "لایه مصورسازی",
+        "components": ["MatplotlibViz", "PlotlyViz", "ReportViz"],
+        "description": "نمایش گرافیکی نتایج"
+      }
+    ],
+    "data_flow": [
+      "کاربر فایل Excel را انتخاب می‌کند",
+      "ExcelReader فایل را خوانده و شیت‌های مورد نظر را استخراج می‌کند",
+      "DatasetParser داده‌های هر شیت را بر اساس ساختار روزانه پردازش می‌کند",
+      "DataRepository داده‌ها را ذخیره و بر اساس کلید Stuff دسته‌بندی می‌کند",
+      "کاربر یک Stuff را انتخاب کرده و تحلیل مورد نظر را اجرا می‌کند",
+      "Analyzer محاسبات آماری را انجام می‌دهد",
+      "Visualizationها نتایج را به صورت گرافیکی نمایش می‌دهند"
+    ]
+  },
+  "main_components": {
+    "excel_reader": {
+      "name": "ExcelReader",
+      "purpose": "خواندن فایل Excel و استخراج شیت‌ها",
+      "methods": [
+        {"name": "__init__", "params": ["path: str"], "description": "سازنده کلاس"},
+        {"name": "list_sheets", "return": "List[str]", "description": "لیست تمام شیت‌های فایل را برمی‌گرداند"},
+        {"name": "read", "params": ["sheet_name: str"], "return": "pd.DataFrame", "description": "یک شیت مشخص را به صورت DataFrame می‌خواند"}
+      ]
+    },
+    "dataset_parser": {
+      "name": "DatasetParser",
+      "purpose": "تشخیص و استخراج داده‌های روزانه از ساختار شیت‌ها",
+      "methods": [
+        {"name": "detect_day_blocks", "params": ["cols: List[str]"], "return": "List[DayBlockSpec]", "description": "ستون‌های مربوط به هر روز را شناسایی می‌کند"},
+        {"name": "parse_sheet", "params": ["df: pd.DataFrame", "sheet_name: str"], "return": "pd.DataFrame", "description": "یک شیت را پردازش کرده و به فرمت نرمال تبدیل می‌کند"}
+      ]
+    },
+    "data_repository": {
+      "name": "DataRepository",
+      "purpose": "ذخیره و مدیریت داده‌های پردازش شده",
+      "methods": [
+        {"name": "__init__", "params": ["reader: ExcelReader", "parser: DatasetParser"], "description": "سازنده کلاس"},
+        {"name": "load", "params": ["sheet_names: List[str]"], "description": "شیت‌های مشخص شده را بارگذاری و پردازش می‌کند"}
+      ]
+    },
+    "analyzer": {
+      "name": "Analyzer",
+      "purpose": "انجام تحلیل‌های آماری بر روی داده‌ها",
+      "methods": [
+        {"name": "clean", "description": "پاکسازی و تبدیل داده‌ها به فرمت عددی"},
+        {"name": "refill_success_rate", "return": "int", "description": "پر کردن نرخ موفقیت گمشده با استفاده از نسبت تولید واقعی به برنامه"},
+        {"name": "refill_actual", "return": "int", "description": "پر کردن تولید واقعی گمشده با استفاده از رگرسیون خطی"},
+        {"name": "t_test_plan_vs_actual", "return": "Tuple[Optional[float], Optional[float], int, int]", "description": "آزمون t-test برای مقایسه برنامه و تولید واقعی"},
+        {"name": "correlation", "params": ["method: str"], "return": "pd.DataFrame", "description": "محاسبه ماتریس همبستگی"},
+        {"name": "regression_plan_to_actual", "params": ["test_size: float", "random_state: int"], "return": "Optional[dict]", "description": "رگرسیون خطی برای پیش‌بینی تولید واقعی از روی برنامه"}
+      ]
+    }
+  },
+  "installation": {
+    "requirements": {
+      "python_version": "3.8+",
+      "essential_packages": [
+        "pandas",
+        "numpy",
+        "openpyxl",
+        "scikit-learn",
+        "scipy",
+        "matplotlib",
+        "plotly"
+      ],
+      "optional_packages": [
+        {"name": "pywebview", "purpose": "برای نمایش Plotly درون برنامه"},
+        {"name": "arabic-reshaper", "purpose": "برای پشتیبانی از فارسی"},
+        {"name": "python-bidi", "purpose": "برای پشتیبانی از فارسی"}
+      ],
+      "font": "Vazirmatn-Regular.ttf (اختیاری - برای نمایش بهتر فارسی)"
+    },
+    "installation_steps": [
+      "فایل‌های پروژه را در یک پوشه قرار دهید: ProductionAnalyzer_Modern.py, DataSet.xlsx, فونت فارسی (اختیاری)",
+      "کتابخانه‌های مورد نیاز را نصب کنید: pip install pandas numpy openpyxl scikit-learn scipy matplotlib plotly",
+      "کتابخانه‌های اختیاری را نصب کنید: pip install pywebview arabic-reshaper python-bidi",
+      "برنامه را اجرا کنید: python ProductionAnalyzer_Modern.py"
+    ],
+    "notes": [
+      "اگر pywebview نصب نباشد، داشبوردهای Plotly در مرورگر پیش‌فرض باز می‌شوند",
+      "اگر کتابخانه‌های RTL نصب نباشند، متن‌های فارسی به درستی نمایش داده نمی‌شوند (اما برنامه کار می‌کند)",
+      "برای بهترین نمایش فارسی، فونت Vazirmatn را در کنار فایل اصلی قرار دهید"
+    ]
+  },
+  "usage_guide": {
+    "steps": [
+      {
+        "step": 1,
+        "title": "بارگذاری فایل",
+        "actions": [
+          "روی دکمه \"Browse\" کلیک کنید",
+          "فایل Excel مورد نظر را انتخاب کنید",
+          "روی دکمه \"Load\" کلیک کنید"
+        ]
+      },
+      {
+        "step": 2,
+        "title": "انتخاب شیت‌ها",
+        "options": [
+          {"mode": "Auto (27..39 except 33)", "description": "شیت‌های ۲۷ تا ۳۹ (به جز ۳۳) را بارگذاری می‌کند"},
+          {"mode": "All sheets in file", "description": "تمام شیت‌های فایل را بارگذاری می‌کند"}
+        ]
+      },
+      {
+        "step": 3,
+        "title": "انتخاب محصول (Stuff)",
+        "actions": [
+          "از لیست سمت چپ، محصول مورد نظر را انتخاب کنید",
+          "می‌توانید با کادر جستجو، محصولات را فیلتر کنید",
+          "دکمه \"Reset\" فیلتر را پاک می‌کند"
+        ]
+      },
+      {
+        "step": 4,
+        "title": "تحلیل و مصورسازی",
+        "options": [
+          {
+            "name": "Matplotlib: Scatter",
+            "description": "نمایش نمودار پراکندگی برنامه تولید در مقابل تولید واقعی در تب \"Plot (Matplotlib)\""
+          },
+          {
+            "name": "Plotly: Dashboard (IN-APP)",
+            "description": "نمایش داشبورد تعاملی شامل سه نمودار در پنجره جداگانه (با pywebview) یا مرورگر"
+          },
+          {
+            "name": "Web Report: Before/After Refill",
+            "description": "تولید گزارش HTML کامل با مقایسه آمار قبل و بعد از پر کردن داده‌های گمشده"
+          }
+        ]
+      }
+    ]
+  },
+  "analytical_features": {
+    "refill": {
+      "success_rate": {
+        "formula": "Success Rate = (Actual Production / Production Plan) × 100",
+        "description": "اگر نرخ موفقیت گمشده باشد اما برنامه و تولید واقعی موجود باشند"
+      },
+      "actual_production": {
+        "description": "اگر تولید واقعی گمشده باشد:",
+        "methods": [
+          "اگر حداقل ۱۰ نمونه معتبر وجود داشته باشد: از رگرسیون خطی برای پیش‌بینی استفاده می‌شود",
+          "در غیر این صورت: از نرخ موفقیت موجود برای تخمین استفاده می‌شود"
+        ]
+      }
+    },
+    "t_test": {
+      "description": "مقایسه میانگین برنامه تولید و تولید واقعی",
+      "null_hypothesis": "تفاوت معنی‌داری بین برنامه و تولید واقعی وجود ندارد",
+      "significance": "p-value < 0.05: تفاوت معنی‌دار است"
+    },
+    "correlation": {
+      "description": "محاسبه همبستگی بین:",
+      "pairs": [
+        "برنامه تولید و تولید واقعی",
+        "برنامه تولید و نرخ موفقیت",
+        "تولید واقعی و نرخ موفقیت"
+      ],
+      "method": "Pearson"
+    },
+    "linear_regression": {
+      "model": "Actual = coef × Plan + intercept",
+      "metrics": ["R²: ضریب تعیین (نشان‌دهنده کیفیت مدل)"]
+    }
+  },
+  "persian_support": {
+    "challenges": [
+      {
+        "component": "Tkinter",
+        "solutions": [
+          "استفاده از کتابخانه python-bidi برای تغییر جهت متن",
+          "پیکربندی تگ rtl برای Text widget"
+        ],
+        "code_example": "def fix_rtl_display(text: object) -> str:\n    if _HAS_RTL_LIBS and _has_arabic_or_persian(s):\n        return get_display(arabic_reshaper.reshape(s))\n    return s"
+      },
+      {
+        "component": "Matplotlib",
+        "solutions": [
+          "استفاده از arabic-reshaper برای اتصال حروف",
+          "استفاده از get_display برای راست‌چین کردن",
+          "جستجوی فونت فارسی در سیستم یا پوشه برنامه"
+        ]
+      },
+      {
+        "component": "Plotly (HTML)",
+        "solutions": [
+          "مرورگرهای مدرن خودکار حروف فارسی را پردازش می‌کنند",
+          "فقط نیاز به تعیین فونت فارسی در CSS",
+          "امکان جاسازی فونت (embed) با Base64"
+        ]
+      }
+    ],
+    "font_search_order": [
+      "جستجو در پوشه برنامه برای فایل‌های TTF با نام‌های: Vazirmatn, Vazir",
+      "جستجو در فونت‌های سیستمی",
+      "استفاده از فونت پیش‌فرض"
+    ]
+  },
+  "limitations_and_requirements": {
+    "limitations": [
+      "ساختار ثابت داده‌ها: برنامه فرض می‌کند داده‌ها دقیقاً به همان شکلی که در مستندات آمده سازماندهی شده‌اند",
+      "عدم پشتیبانی از پایگاه داده: فقط فایل‌های Excel پشتیبانی می‌شوند",
+      "نیاز به اینترنت برای Plotly CDN: اگر از CDN استفاده شود، نیاز به اتصال اینترنت دارد"
+    ],
+    "requirements": {
+      "python": "3.8+",
+      "essential": ["pandas", "numpy", "openpyxl", "matplotlib", "scikit-learn", "scipy"],
+      "optional": ["pywebview", "arabic-reshaper", "python-bidi", "Persian font"]
+    },
+    "execution_notes": [
+      "اولین بار اجرا ممکن است کمی طول بکشد",
+      "گزارش‌ها در پوشه ~/.production_analyzer/ ذخیره می‌شوند",
+      "برای حذف گزارش‌ها، این پوشه را پاک کنید"
+    ]
+  },
+  "conclusion": {
+    "summary": "Production Analyzer یک ابزار کامل برای تحلیل داده‌های تولید روزانه است که با توجه به نیازهای صنعتی و با پشتیبانی کامل از زبان فارسی طراحی شده است.",
+    "applications": [
+      "عملکرد خط تولید را در روزهای مختلف مقایسه کرد",
+      "نرخ موفقیت را محاسبه و تحلیل کرد",
+      "داده‌های ناقص را به صورت هوشمند تکمیل کرد",
+      "گزارش‌های آماری دقیق تهیه کرد",
+      "روندها و الگوها را شناسایی کرد"
+    ],
+    "future_development": [
+      "افزودن پشتیبانی از پایگاه داده‌های مختلف",
+      "بهبود الگوریتم‌های پیش‌بینی با استفاده از روش‌های پیشرفته‌تر",
+      "افزودن قابلیت خروجی گرفتن به فرمت‌های مختلف (PDF, Excel)",
+      "توسعه رابط کاربری تحت وب"
+    ]
+  }
+}
